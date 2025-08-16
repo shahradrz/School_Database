@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 12, 2025 at 08:38 PM
+-- Generation Time: Aug 16, 2025 at 08:50 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -24,23 +24,46 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `city`
+-- Table structure for table `courses`
 --
 
-CREATE TABLE `city` (
-  `codecity` int(11) NOT NULL,
-  `Cityname` varchar(30) NOT NULL
+CREATE TABLE `courses` (
+  `cid` int(11) NOT NULL,
+  `cname` varchar(15) NOT NULL,
+  `ctype` varchar(15) NOT NULL,
+  `cSession` varchar(15) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `city`
+-- Dumping data for table `courses`
 --
 
-INSERT INTO `city` (`codecity`, `Cityname`) VALUES
-(21, 'تهران'),
-(31, 'اصفهان'),
-(35, 'یزد'),
-(51, 'مشهد');
+INSERT INTO `courses` (`cid`, `cname`, `ctype`, `cSession`) VALUES
+(1001, 'Farsi', 'teyouri', '5'),
+(1002, 'Math', 'T', '10'),
+(1003, 'Sport', 'Action', '5'),
+(1004, 'Arabi', 'T', '10');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `student-course`
+--
+
+CREATE TABLE `student-course` (
+  `studentid` int(11) NOT NULL,
+  `courseid` int(11) NOT NULL,
+  `mark` tinyint(4) NOT NULL,
+  `year` smallint(6) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `student-course`
+--
+
+INSERT INTO `student-course` (`studentid`, `courseid`, `mark`, `year`) VALUES
+(8001, 1004, 20, 1990),
+(8003, 1002, 18, 2024);
 
 -- --------------------------------------------------------
 
@@ -49,64 +72,71 @@ INSERT INTO `city` (`codecity`, `Cityname`) VALUES
 --
 
 CREATE TABLE `students` (
-  `id` int(11) NOT NULL,
-  `name` varchar(15) NOT NULL,
-  `family` varchar(20) NOT NULL,
-  `address` text NOT NULL,
-  `citycode` int(11) NOT NULL
+  `stdid` int(11) NOT NULL,
+  `stdname` varchar(15) NOT NULL,
+  `stdfamily` varchar(15) NOT NULL,
+  `stdtell` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `students`
 --
 
-INSERT INTO `students` (`id`, `name`, `family`, `address`, `citycode`) VALUES
-(1, 'علی', 'علوی', 'اصفهان', 31),
-(2, 'رضا', 'رضوی', 'تهران', 21),
-(3, 'تقی', 'تقوی', 'مشهد', 51);
+INSERT INTO `students` (`stdid`, `stdname`, `stdfamily`, `stdtell`) VALUES
+(8001, 'ali', 'alavi', '91333565'),
+(8002, 'taghi', 'taghavi', '0912123165'),
+(8003, 'naghi', 'naghavi', '91333565'),
+(8004, 'reza', 'razavi', '0912123165');
 
 --
 -- Indexes for dumped tables
 --
 
 --
--- Indexes for table `city`
+-- Indexes for table `courses`
 --
-ALTER TABLE `city`
-  ADD PRIMARY KEY (`codecity`);
+ALTER TABLE `courses`
+  ADD PRIMARY KEY (`cid`);
+
+--
+-- Indexes for table `student-course`
+--
+ALTER TABLE `student-course`
+  ADD KEY `sc` (`studentid`),
+  ADD KEY `student-course_ibfk_1` (`courseid`);
 
 --
 -- Indexes for table `students`
 --
 ALTER TABLE `students`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `cs` (`citycode`);
+  ADD PRIMARY KEY (`stdid`);
 
 --
 -- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT for table `city`
+-- AUTO_INCREMENT for table `courses`
 --
-ALTER TABLE `city`
-  MODIFY `codecity` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
+ALTER TABLE `courses`
+  MODIFY `cid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1005;
 
 --
 -- AUTO_INCREMENT for table `students`
 --
 ALTER TABLE `students`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `stdid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8005;
 
 --
 -- Constraints for dumped tables
 --
 
 --
--- Constraints for table `students`
+-- Constraints for table `student-course`
 --
-ALTER TABLE `students`
-  ADD CONSTRAINT `cs` FOREIGN KEY (`citycode`) REFERENCES `city` (`codecity`);
+ALTER TABLE `student-course`
+  ADD CONSTRAINT `sc` FOREIGN KEY (`studentid`) REFERENCES `students` (`stdid`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `student-course_ibfk_1` FOREIGN KEY (`courseid`) REFERENCES `courses` (`cid`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
